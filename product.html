@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - FADE Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color: #2c2a29; --accent-color: #b89b72; --bg-color: #fcfbf7; --card-bg: #ffffff; --header-bg: #ffffff; --text-gray: #6b6b6b; --border-color: #e8e3d9; --font-heading: 'Playfair Display', serif; --font-body: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-color); color: var(--primary-color); }
+        a { text-decoration: none; color: inherit; } img { max-width: 100%; display: block; }
+
+        header { background: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; font-family: var(--font-heading); font-size: 24px; font-weight: 700; }
+        .logo i { margin-right: 8px; }
+        .logo span { font-family: var(--font-body); font-size: 10px; display: block; letter-spacing: 3px; color: var(--text-gray);}
+        .header-icons { display: flex; gap: 15px; font-size: 20px; align-items: center; }
+        .cart-count { background: #d32f2f; color: #fff; border-radius: 50%; padding: 2px 6px; font-size: 10px; position: absolute; top: -5px; right: -8px;}
+        .cart-icon-wrapper { position: relative; cursor: pointer;}
+
+        .product-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 40px; }
+        .product-image { flex: 1; min-width: 300px; background: #f5f3ee; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+        .product-image img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 3/4; }
+        
+        .product-details { flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: center; }
+        .breadcrumb { font-size: 13px; color: var(--text-gray); margin-bottom: 15px; }
+        .breadcrumb a { color: var(--primary-color); font-weight: 500; }
+        
+        .product-title { font-family: var(--font-heading); font-size: 36px; margin-bottom: 10px; }
+        .product-price { font-size: 24px; font-weight: 600; color: var(--accent-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;}
+        .product-price del { font-size: 18px; color: #999; font-weight: normal; }
+        .product-price span.discount { font-size: 16px; color: #ff4d4d; }
+        
+        .product-desc { font-size: 15px; color: var(--text-gray); line-height: 1.6; margin-bottom: 30px; }
+        
+        .size-selector { margin-bottom: 30px; }
+        .size-selector p { font-weight: 600; margin-bottom: 10px; font-size: 14px; }
+        .sizes { display: flex; gap: 10px; }
+        .size-btn { width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-weight: 600; transition: 0.3s; background: #fff; }
+        .size-btn:hover, .size-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: #fff; }
+
+        .action-buttons { display: flex; gap: 15px; }
+        .action-buttons button { flex: 1; padding: 15px; border-radius: 6px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s; }
+        .btn-cart { background: var(--primary-color); color: #fff; }
+        .btn-cart:hover { background: #444; }
+        .btn-buy { background: var(--accent-color); color: #fff; }
+        .btn-buy:hover { background: #a37f54; }
+
+        @media (max-width: 768px) {
+            .product-container { flex-direction: column; }
+            .product-title { font-size: 28px; }
+            .action-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo"><i class="fa-solid fa-bag-shopping"></i><div>FADE<span>FASHION STORE</span></div></a>
+        <div class="header-icons">
+            <a href="index.html"><i class="fa-solid fa-house"></i></a>
+            <a href="wishlist.html"><i class="fa-solid fa-star"></i></a>
+            <div class="cart-icon-wrapper" onclick="window.location.href='index.html'">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="product-container">
+        <!-- Left Side: Image -->
+        <div class="product-image">
+            <img id="p-image" src="" alt="Product Image">
+        </div>
+
+        <!-- Right Side: Details -->
+        <div class="product-details">
+            <div class="breadcrumb"><a href="index.html">Home</a> / <span id="p-category">Category</span></div>
+            <h1 class="product-title" id="p-name">Product Name</h1>
+            
+            <div class="product-price" id="p-price-container">
+                <span id="p-price">₹0</span>
+            </div>
+            
+            <p class="product-desc">Elevate your everyday style with this premium quality piece. Crafted with breathable, durable fabric, it's perfect for any occasion. Pair it with your favorite jeans or trousers for a complete look.</p>
+            
+            <div class="size-selector">
+                <p>Select Size</p>
+                <div class="sizes">
+                    <div class="size-btn active">S</div>
+                    <div class="size-btn">M</div>
+                    <div class="size-btn">L</div>
+                    <div class="size-btn">XL</div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-cart" id="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                <button class="btn-buy" id="buy-now-btn">Buy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL-ൽ നിന്നും വിവരങ്ങൾ എടുക്കുന്നു
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+        const price = params.get('price');
+        const image = params.get('image');
+        const category = params.get('category');
+        const originalPrice = params.get('originalPrice');
+        const badge = params.get('badge');
+
+        // വിവരങ്ങൾ പേജിൽ കാണിക്കുന്നു
+        document.getElementById('p-name').innerText = name;
+        document.getElementById('p-image').src = image || 'https://via.placeholder.com/500x700?text=No+Image';
+        document.getElementById('p-category').innerText = category;
+
+        let priceHTML = `₹${price}`;
+        if(originalPrice && Number(originalPrice) > Number(price)) {
+            const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
+            priceHTML += ` <del>₹${originalPrice}</del> <span class="discount">(${discount}% OFF)</span>`;
+        }
+        document.getElementById('p-price-container').innerHTML = priceHTML;
+
+        // Size Selector ലോജിക്
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Cart Logic (LocalStorage)
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('fade_cart')) || [];
+            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+        updateCartCount();
+
+        document.getElementById('add-cart-btn').addEventListener('click', () => {
+            let cart = JSON.parse(localStorage.getItem('fade_cart')) || [];
+            const existing = cart.find(item => item.name === name);
+            if(existing) existing.quantity += 1;
+            else cart.push({ name, price: Number(price), image, quantity: 1 });
+            
+            localStorage.setItem('fade_cart', JSON.stringify(cart));
+            updateCartCount();
+            alert("Added to cart successfully!");
+        });
+
+        document.getElementById('buy-now-btn').addEventListener('click', () => {
+            if(confirm(`Proceed to buy directly?\n\nItem: ${name}\nPrice: ₹${price}`)) {
+                alert(`🎉 Order Placed Successfully for ${name}!`);
+            }
+        });
+    </script>
+</body>
+</html>

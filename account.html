@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - FADE Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-color: #2c2a29; --accent-color: #b89b72; --bg-color: #fcfbf7; --border-color: #e8e3d9; --font-heading: 'Playfair Display', serif; --font-body: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-color); color: var(--primary-color); }
+        
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        
+        .profile-card { background: #fff; padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; margin-bottom: 40px;}
+        .profile-icon { font-size: 60px; color: var(--accent-color); margin-bottom: 15px; }
+        .profile-card h2 { font-family: var(--font-heading); font-size: 28px; margin-bottom: 10px; }
+        .profile-card p { color: #666; margin-bottom: 20px; }
+        .info-box { background: var(--bg-color); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 15px; text-align: left; }
+        .info-box strong { display: block; font-size: 12px; color: #888; }
+        .info-box span { font-size: 16px; font-weight: 600; }
+        
+        .btn { display: inline-block; padding: 12px 20px; border: none; border-radius: 6px; background: var(--primary-color); color: #fff; font-weight: 600; cursor: pointer; text-decoration: none; transition: 0.3s; }
+        .logout-btn { background: #d32f2f; }
+
+        /* Orders Section */
+        .orders-section { background: #fff; padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); }
+        .orders-section h3 { font-family: var(--font-heading); font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;}
+        
+        .order-item { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .order-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; color: #666; border-bottom: 1px dashed #ccc; padding-bottom: 10px;}
+        .order-products { font-size: 14px; margin-bottom: 10px; }
+        .order-footer { display: flex; justify-content: space-between; font-weight: 600; color: var(--accent-color); }
+        .status-badge { padding: 3px 10px; border-radius: 12px; font-size: 12px; color: #fff; }
+        .status-Pending { background: #fbc02d; } .status-Processing { background: #2196f3; } .status-Shipped { background: #9c27b0; } .status-Delivered { background: #4caf50; }
+        
+        .no-orders { text-align: center; color: #888; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <i class="fa-solid fa-circle-user profile-icon"></i>
+            <h2>My Account</h2>
+            <div class="info-box"><strong>Name</strong><span id="user-name">Loading...</span></div>
+            <div class="info-box"><strong>Email</strong><span id="user-email">Loading...</span></div>
+            <a href="index.html" class="btn">Continue Shopping</a>
+            <button class="btn logout-btn" onclick="logoutUser()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+
+        <!-- My Orders -->
+        <div class="orders-section">
+            <h3><i class="fa-solid fa-box"></i> My Orders</h3>
+            <div id="orders-container">
+                <div class="no-orders">Loading your orders...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "YOUR_API_KEY", authDomain: "YOUR_PROJECT.firebaseapp.com", projectId: "YOUR_PROJECT", storageBucket: "YOUR_PROJECT.appspot.com", messagingSenderId: "YOUR_ID", appId: "YOUR_APP_ID" };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('user-name').innerText = user.displayName || "Customer";
+                document.getElementById('user-email').innerText = user.email;
+                
+                // Fetch Orders for this user
+                loadUserOrders(user.email);
+            } else {
+                alert("Please login to view your account.");
+                window.location.href = "login.html";
+            }
+        });
+
+        async function loadUserOrders(email) {
+            const container = document.getElementById('orders-container');
+            try {
+                const q = query(collection(db, "orders"), where("userEmail", "==", email));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<div class="no-orders">You have not placed any orders yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const order = doc.data();
+                    const date = new Date(order.timestamp).toLocaleDateString();
+                    
+                    let itemsHTML = order.items.map(item => `${item.name} (x${item.quantity})`).join(', ');
+
+                    container.innerHTML += `
+                        <div class="order-item">
+                            <div class="order-header">
+                                <span>Order ID: #${doc.id.slice(-6).toUpperCase()}</span>
+                                <span>${date}</span>
+                            </div>
+                            <div class="order-products">${itemsHTML}</div>
+                            <div class="order-footer">
+                                <span>Total: ₹${order.totalAmount}</span>
+                                <span class="status-badge status-${order.status}">${order.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                container.innerHTML = '<div class="no-orders" style="color:red;">Failed to load orders.</div>';
+            }
+        }
+
+        window.logoutUser = function() {
+            signOut(auth).then(() => { window.location.href = "index.html"; });
+        }
+    </script>
+</body>
+</html>

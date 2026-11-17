@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - FADE Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --primary-color: #2c2a29; --accent-color: #b89b72; --bg-color: #fcfbf7; 
+            --card-bg: #ffffff; --text-gray: #6b6b6b; --border-color: #e8e3d9; 
+            --font-heading: 'Playfair Display', serif; --font-body: 'Inter', sans-serif; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-color); color: var(--primary-color); }
+        a { text-decoration: none; color: inherit; }
+
+        header { background: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+        .logo { display: flex; align-items: center; font-family: var(--font-heading); font-size: 24px; font-weight: 700; letter-spacing: 2px; }
+        .logo i { margin-right: 8px; }
+        .logo span { font-family: var(--font-body); font-size: 10px; display: block; letter-spacing: 3px; color: var(--text-gray);}
+        .back-btn { background: var(--primary-color); color: #fff; padding: 8px 15px; border-radius: 4px; font-size: 13px; font-weight: 500; transition: 0.3s; }
+        .back-btn:hover { background: var(--accent-color); }
+
+        .tabs-container { display: flex; justify-content: center; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+        .tab-btn { padding: 12px 25px; font-size: 15px; font-weight: 600; font-family: var(--font-heading); background: transparent; border: 2px solid var(--border-color); color: var(--text-gray); border-radius: 6px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+        .tab-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+        
+        .admin-container { max-width: 1100px; margin: 20px auto 40px; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 30px; }
+        
+        .form-section { flex: 1; min-width: 320px; background: #fff; padding: 30px; border-radius: 10px; border: 1px solid var(--border-color); box-shadow: 0 5px 15px rgba(0,0,0,0.03); height: fit-content; }
+        .form-section h2 { font-family: var(--font-heading); margin-bottom: 20px; font-size: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 5px; font-family: var(--font-body); font-size: 14px; outline: none; background: var(--bg-color); }
+        .form-control:focus { border-color: var(--accent-color); }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .submit-btn { flex: 1; background: var(--primary-color); color: #fff; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.3s; font-size: 15px; }
+        .submit-btn:hover { background: var(--accent-color); }
+        .cancel-btn { background: #f1f1f1; color: #333; border: 1px solid #ccc; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: 600; transition: 0.3s; display: none; }
+
+        .list-section { flex: 1.5; min-width: 320px; background: #fff; padding: 30px; border-radius: 10px; border: 1px solid var(--border-color); box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .list-section h2 { font-family: var(--font-heading); margin-bottom: 20px; font-size: 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .product-list { display: flex; flex-direction: column; gap: 15px; max-height: 650px; overflow-y: auto; padding-right: 5px; }
+        
+        .product-item { display: flex; align-items: center; gap: 15px; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); }
+        .product-item img { width: 80px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; }
+        .product-info { flex: 1; }
+        .product-info h4 { font-size: 15px; margin-bottom: 4px; color: var(--primary-color); }
+        .product-info p { font-size: 12px; color: var(--text-gray); margin-bottom: 2px; }
+        
+        .action-btns { display: flex; gap: 8px; }
+        .edit-btn { background: #f0ad4e; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; transition: 0.3s; }
+        .delete-btn { background: #ff4d4d; color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; transition: 0.3s; }
+        .empty-msg { text-align: center; color: var(--text-gray); font-size: 14px; margin-top: 30px; }
+        
+        .hidden { display: none !important; }
+
+        .status-select { padding: 5px 10px; border-radius: 4px; font-family: var(--font-body); font-size: 13px; font-weight: 600; border: 1px solid #ccc; outline: none; cursor: pointer; }
+        .status-Pending { background: #ffeb3b; color: #000; border-color: #fbc02d; }
+        .status-Processing { background: #2196f3; color: #fff; border-color: #1976d2; }
+        .status-Shipped { background: #9c27b0; color: #fff; border-color: #7b1fa2; }
+        .status-Delivered { background: #4caf50; color: #fff; border-color: #388e3c; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><i class="fa-solid fa-bag-shopping"></i><div>FADE<span>ADMIN PANEL</span></div></div>
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Site</a>
+    </header>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" id="tab-products" onclick="switchTab('products')"><i class="fa-solid fa-box"></i> Products</button>
+        <button class="tab-btn" id="tab-offers" onclick="switchTab('offers')"><i class="fa-solid fa-tags"></i> Offers</button>
+        <button class="tab-btn" id="tab-orders" onclick="switchTab('orders')"><i class="fa-solid fa-clipboard-list"></i> Orders</button>
+        <button class="tab-btn" id="tab-messages" onclick="switchTab('messages')"><i class="fa-solid fa-envelope"></i> Messages</button>
+        <button class="tab-btn" id="tab-profile" onclick="switchTab('profile')"><i class="fa-solid fa-user"></i> Profile</button>
+    </div>
+
+    <!-- ================= PRODUCTS SECTION ================= -->
+    <div class="admin-container" id="section-products">
+        <div class="form-section">
+            <h2 id="prod-formTitle"><i class="fa-solid fa-plus"></i> Add Product</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label>Category</label>
+                    <select class="form-control" id="category" required>
+                        <option value="tshirts">T-Shirts</option><option value="hoodies">Hoodies & Jackets</option><option value="shoes">Shoes</option><option value="womens">Women's Wear</option><option value="kids">Kids' Wear</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Product Name</label><input type="text" class="form-control" id="pName" required></div>
+                <div class="form-group"><label>Original Price (MRP) (₹)</label><input type="number" class="form-control" id="pOriginalPrice"></div>
+                <div class="form-group"><label>Offer Price (₹)</label><input type="number" class="form-control" id="pPrice" required></div>
+                <div class="form-group"><label>Image URL</label><input type="url" class="form-control" id="pImage" required></div>
+                <div class="form-group">
+                    <label>Badge</label>
+                    <select class="form-control" id="pBadge"><option value="">None</option><option value="New">New</option><option value="Bestseller">Bestseller</option></select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="submit-btn" id="prod-submitBtn"><i class="fa-solid fa-cloud-arrow-up"></i> Add Product</button>
+                    <button type="button" class="cancel-btn" id="prod-cancelBtn" onclick="resetProductForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div class="list-section">
+            <h2>All Products <span id="productCount" style="font-size: 14px; color: var(--text-gray);">(0)</span></h2>
+            <div class="product-list" id="productList"></div>
+        </div>
+    </div>
+
+    <!-- ================= OFFERS SECTION ================= -->
+    <div class="admin-container hidden" id="section-offers">
+        <div class="form-section">
+            <h2 id="offer-formTitle"><i class="fa-solid fa-plus"></i> Add Offer</h2>
+            <form id="offerForm">
+                <div class="form-group"><label>Offer Title</label><input type="text" class="form-control" id="oTitle" required></div>
+                <div class="form-group"><label>Description</label><input type="text" class="form-control" id="oDesc" required></div>
+                <div class="form-group"><label>Image URL</label><input type="url" class="form-control" id="oImage" required></div>
+                <div class="form-group">
+                    <label>Link to Category</label>
+                    <select class="form-control" id="oLink" required>
+                        <option value="tshirts.html">T-Shirts</option><option value="hoodies-jackets.html">Hoodies</option><option value="shoes.html">Shoes</option><option value="womens-wear.html">Women</option><option value="kids-wear.html">Kids</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="submit-btn" id="offer-submitBtn" style="background:#28a745;"><i class="fa-solid fa-cloud-arrow-up"></i> Add Offer</button>
+                    <button type="button" class="cancel-btn" id="offer-cancelBtn" onclick="resetOfferForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+        <div class="list-section">
+            <h2>Active Offers <span id="offerCount" style="font-size: 14px; color: var(--text-gray);">(0)</span></h2>
+            <div class="product-list" id="offerList"></div>
+        </div>
+    </div>
+
+    <!-- ================= ORDERS SECTION ================= -->
+    <div class="admin-container hidden" id="section-orders" style="flex-direction: column;">
+        <div class="list-section" style="width: 100%;">
+            <h2>Incoming Orders <span id="orderCount" style="font-size: 14px; color: var(--text-gray);">(0)</span></h2>
+            <div class="product-list" id="orderList" style="max-height: none;"></div>
+        </div>
+    </div>
+
+    <!-- ================= MESSAGES SECTION ================= -->
+    <div class="admin-container hidden" id="section-messages" style="flex-direction: column;">
+        <div class="list-section" style="width: 100%;">
+            <h2>Customer Messages <span id="msgCount" style="font-size: 14px; color: var(--text-gray);">(0)</span></h2>
+            <div class="product-list" id="messageList" style="max-height: none;"></div>
+        </div>
+    </div>
+
+    <!-- ================= PROFILE SECTION ================= -->
+    <div class="admin-container hidden" id="section-profile" style="align-items: center; justify-content: center;">
+        <div class="form-section" style="text-align: center; width: 100%; max-width: 400px;">
+            <h2 style="justify-content: center;"><i class="fa-solid fa-circle-user"></i> Admin Profile</h2>
+            <p style="margin: 20px 0; font-size: 16px;"><strong>Email:</strong> <span id="adminEmail">Loading...</span></p>
+            <button class="submit-btn" style="background:#d32f2f;" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, initializeFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8cYU0tb5kkpUiiXawgqa8usuBiexPivg",
+            authDomain: "fadestore-fa311.firebaseapp.com",
+            projectId: "fadestore-fa311",
+            storageBucket: "fadestore-fa311.firebasestorage.app",
+            messagingSenderId: "713477757029",
+            appId: "1:713477757029:web:0997af2eb72e9dc1bb4e8c",
+            measurementId: "G-WW2N8F77VZ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = initializeFirestore(app, { experimentalForceLongPolling: true }); 
+        const auth = getAuth(app);
+
+        // Security Check
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('adminEmail').innerText = user.email;
+            } else {
+                alert("Please login to access Admin Panel.");
+                window.location.href = "login.html";
+            }
+        });
+
+        window.logoutAdmin = function() {
+            signOut(auth).then(() => { window.location.href = "index.html"; });
+        }
+
+        // ================= TAB SWITCHING =================
+        window.switchTab = function(tab) {
+            document.querySelectorAll('.admin-container').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            if(tab === 'products') {
+                document.getElementById('section-products').classList.remove('hidden');
+                document.getElementById('tab-products').classList.add('active');
+            } else if(tab === 'offers') {
+                document.getElementById('section-offers').classList.remove('hidden');
+                document.getElementById('tab-offers').classList.add('active');
+            } else if(tab === 'orders') {
+                document.getElementById('section-orders').classList.remove('hidden');
+                document.getElementById('tab-orders').classList.add('active');
+                loadOrders();
+            } else if(tab === 'messages') {
+                document.getElementById('section-messages').classList.remove('hidden');
+                document.getElementById('tab-messages').classList.add('active');
+                loadMessages();
+            } else if(tab === 'profile') {
+                document.getElementById('section-profile').classList.remove('hidden');
+                document.getElementById('tab-profile').classList.add('active');
+            }
+        }
+
+        // ================= PRODUCTS =================
+        const productList = document.getElementById('productList');
+        const productCount = document.getElementById('productCount');
+        let editingProductId = null;
+
+        async function loadProducts() {
+            productList.innerHTML = '<div class="empty-msg"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>';
+            try {
+                const querySnapshot = await getDocs(collection(db, "products"));
+                productList.innerHTML = '';
+                productCount.innerText = `(${querySnapshot.size})`;
+                if (querySnapshot.empty) { productList.innerHTML = '<div class="empty-msg">No products added yet.</div>'; return; }
+
+                querySnapshot.forEach((docSnap) => {
+                    const product = docSnap.data();
+                    const productDataString = encodeURIComponent(JSON.stringify({...product, id: docSnap.id}));
+                    const item = document.createElement('div');
+                    item.className = 'product-item';
+                    item.innerHTML = `
+                        <img src="${product.image}" onerror="this.src='https://via.placeholder.com/80x60?text=No+Img'">
+                        <div class="product-info"><h4>${product.name}</h4><p>₹${product.price} | ${product.category}</p></div>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="editProduct('${productDataString}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="delete-btn" onclick="deleteProduct('${docSnap.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>`;
+                    productList.appendChild(item);
+                });
+            } catch (error) { productList.innerHTML = '<div class="empty-msg" style="color:red">Error loading.</div>'; }
+        }
+
+        window.editProduct = function(encodedData) {
+            const p = JSON.parse(decodeURIComponent(encodedData));
+            editingProductId = p.id;
+            document.getElementById('category').value = p.category;
+            document.getElementById('pName').value = p.name;
+            document.getElementById('pOriginalPrice').value = p.originalPrice || '';
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pImage').value = p.image;
+            document.getElementById('pBadge').value = p.badge || '';
+            document.getElementById('prod-formTitle').innerHTML = '<i class="fa-solid fa-pen"></i> Edit Product';
+            document.getElementById('prod-submitBtn').innerHTML = 'Update';
+            document.getElementById('prod-submitBtn').style.background = '#28a745';
+            document.getElementById('prod-cancelBtn').style.display = 'block';
+        };
+
+        window.resetProductForm = function() {
+            editingProductId = null; document.getElementById('productForm').reset();
+            document.getElementById('prod-formTitle').innerHTML = '<i class="fa-solid fa-plus"></i> Add Product';
+            document.getElementById('prod-submitBtn').innerHTML = 'Add Product';
+            document.getElementById('prod-submitBtn').style.background = 'var(--primary-color)';
+            document.getElementById('prod-cancelBtn').style.display = 'none';
+        };
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = document.getElementById('prod-submitBtn'); btn.innerHTML = 'Wait...'; btn.disabled = true;
+            const data = {
+                category: document.getElementById('category').value, name: document.getElementById('pName').value,
+                originalPrice: document.getElementById('pOriginalPrice').value, price: document.getElementById('pPrice').value,
+                image: document.getElementById('pImage').value, badge: document.getElementById('pBadge').value, timestamp: Date.now()
+            };
+            try {
+                if(editingProductId) await updateDoc(doc(db, "products", editingProductId), data);
+                else await addDoc(collection(db, "products"), data);
+                alert('Saved!'); resetProductForm(); loadProducts();
+            } catch (error) { alert('Error: ' + error.message); } finally { btn.disabled = false; btn.innerHTML = editingProductId ? 'Update' : 'Add Product'; }
+        });
+
+        window.deleteProduct = async function(id) {
+            if(confirm('Delete this product?')) { await deleteDoc(doc(db, "products", id)); loadProducts(); }
+        };
+
+        // ================= OFFERS =================
+        const offerList = document.getElementById('offerList'); const offerCount = document.getElementById('offerCount'); let editingOfferId = null;
+
+        async function loadOffers() {
+            offerList.innerHTML = '<div class="empty-msg"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>';
+            try {
+                const querySnapshot = await getDocs(collection(db, "offers"));
+                offerList.innerHTML = ''; offerCount.innerText = `(${querySnapshot.size})`;
+                if (querySnapshot.empty) { offerList.innerHTML = '<div class="empty-msg">No offers added yet.</div>'; return; }
+                querySnapshot.forEach((docSnap) => {
+                    const offer = docSnap.data(); const offerDataString = encodeURIComponent(JSON.stringify({...offer, id: docSnap.id}));
+                    const item = document.createElement('div'); item.className = 'product-item';
+                    item.innerHTML = `
+                        <img src="${offer.image}" style="width:100px; height:60px;" onerror="this.src='https://via.placeholder.com/100x60?text=No+Img'">
+                        <div class="product-info"><h4>${offer.title}</h4><p>${offer.desc} | Link: ${offer.link}</p></div>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="editOffer('${offerDataString}')"><i class="fa-solid fa-pen"></i></button>
+                            <button class="delete-btn" onclick="deleteOffer('${docSnap.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>`;
+                    offerList.appendChild(item);
+                });
+            } catch (error) { offerList.innerHTML = '<div class="empty-msg" style="color:red">Error loading offers.</div>'; }
+        }
+
+        window.editOffer = function(encodedData) {
+            const o = JSON.parse(decodeURIComponent(encodedData)); editingOfferId = o.id;
+            document.getElementById('oTitle').value = o.title; document.getElementById('oDesc').value = o.desc;
+            document.getElementById('oImage').value = o.image; document.getElementById('oLink').value = o.link;
+            document.getElementById('offer-formTitle').innerHTML = '<i class="fa-solid fa-pen"></i> Edit Offer';
+            document.getElementById('offer-submitBtn').innerHTML = 'Update'; document.getElementById('offer-submitBtn').style.background = '#f0ad4e';
+            document.getElementById('offer-cancelBtn').style.display = 'block';
+        };
+
+        window.resetOfferForm = function() {
+            editingOfferId = null; document.getElementById('offerForm').reset();
+            document.getElementById('offer-formTitle').innerHTML = '<i class="fa-solid fa-plus"></i> Add Offer';
+            document.getElementById('offer-submitBtn').innerHTML = 'Add Offer'; document.getElementById('offer-submitBtn').style.background = '#28a745';
+            document.getElementById('offer-cancelBtn').style.display = 'none';
+        };
+
+        document.getElementById('offerForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); const btn = document.getElementById('offer-submitBtn'); btn.innerHTML = 'Wait...'; btn.disabled = true;
+            const data = { title: document.getElementById('oTitle').value, desc: document.getElementById('oDesc').value, image: document.getElementById('oImage').value, link: document.getElementById('oLink').value, timestamp: Date.now() };
+            try {
+                if(editingOfferId) await updateDoc(doc(db, "offers", editingOfferId), data);
+                else await addDoc(collection(db, "offers"), data);
+                alert('Offer Saved!'); resetOfferForm(); loadOffers();
+            } catch (error) { alert('Error: ' + error.message); } finally { btn.disabled = false; btn.innerHTML = editingOfferId ? 'Update' : 'Add Offer'; }
+        });
+
+        window.deleteOffer = async function(id) {
+            if(confirm('Delete this offer?')) { await deleteDoc(doc(db, "offers", id)); loadOffers(); }
+        };
+
+        // ================= ORDERS =================
+        const orderList = document.getElementById('orderList'); const orderCount = document.getElementById('orderCount');
+
+        async function loadOrders() {
+            orderList.innerHTML = '<div class="empty-msg"><i class="fa-solid fa-spinner fa-spin"></i> Loading Orders...</div>';
+            try {
+                const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                orderList.innerHTML = ''; orderCount.innerText = `(${querySnapshot.size})`;
+
+                if (querySnapshot.empty) { orderList.innerHTML = '<div class="empty-msg">No orders received yet.</div>'; return; }
+
+                querySnapshot.forEach((docSnap) => {
+                    const order = docSnap.data();
+                    const date = new Date(order.timestamp).toLocaleString();
+                    let itemsHTML = '';
+                    order.items.forEach(item => { itemsHTML += `<div>• ${item.name} (x${item.quantity}) - ₹${item.price * item.quantity}</div>`; });
+
+                    const statuses = ["Pending", "Processing", "Shipped", "Delivered"];
+                    let optionsHTML = statuses.map(s => `<option value="${s}" ${order.status === s ? 'selected' : ''}>${s}</option>`).join('');
+
+                    const item = document.createElement('div');
+                    item.className = 'product-item'; item.style.flexDirection = 'column'; item.style.alignItems = 'flex-start';
+                    item.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; width:100%; border-bottom:1px dashed #ccc; padding-bottom:10px; margin-bottom:10px;">
+                            <strong>Order #${docSnap.id.slice(-6).toUpperCase()}</strong> <span style="font-size:12px; color:#666;">${date}</span>
+                        </div>
+                        <div style="font-size:13px; margin-bottom:10px;">
+                            <strong>Customer:</strong> ${order.customerName} (${order.userEmail || 'Guest'})<br>
+                            <strong>Phone:</strong> ${order.phone}<br>
+                            <strong>Address:</strong> ${order.address}
+                        </div>
+                        <div style="background:#fff; width:100%; padding:10px; border-radius:4px; font-size:13px; margin-bottom:10px;">${itemsHTML}</div>
+                        <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+                            <strong style="color:var(--accent-color);">Total: ₹${order.totalAmount}</strong>
+                            <select class="status-select status-${order.status}" onchange="updateOrderStatus('${docSnap.id}', this.value, this)">${optionsHTML}</select>
+                        </div>`;
+                    orderList.appendChild(item);
+                });
+            } catch (error) { orderList.innerHTML = '<div class="empty-msg" style="color:red">Failed to load orders.</div>'; }
+        }
+
+        window.updateOrderStatus = async function(id, newStatus, selectElement) {
+            try {
+                await updateDoc(doc(db, "orders", id), { status: newStatus });
+                selectElement.className = `status-select status-${newStatus}`;
+            } catch (error) { alert("Failed to update status: " + error.message); }
+        }
+
+        // ================= MESSAGES =================
+        const messageList = document.getElementById('messageList'); const msgCount = document.getElementById('msgCount');
+
+        async function loadMessages() {
+            messageList.innerHTML = '<div class="empty-msg"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>';
+            try {
+                const q = query(collection(db, "messages"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                messageList.innerHTML = ''; msgCount.innerText = `(${querySnapshot.size})`;
+
+                if (querySnapshot.empty) { messageList.innerHTML = '<div class="empty-msg">No messages received yet.</div>'; return; }
+
+                querySnapshot.forEach((docSnap) => {
+                    const msg = docSnap.data();
+                    const date = new Date(msg.timestamp).toLocaleString();
+                    const item = document.createElement('div');
+                    item.className = 'product-item'; item.style.flexDirection = 'column'; item.style.alignItems = 'flex-start';
+                    item.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; width:100%; border-bottom:1px dashed #ccc; padding-bottom:10px; margin-bottom:10px;">
+                            <strong>${msg.subject}</strong> <span style="font-size:12px; color:#666;">${date}</span>
+                        </div>
+                        <div style="font-size:13px; margin-bottom:10px;">
+                            <strong>From:</strong> ${msg.name} (<a href="mailto:${msg.email}">${msg.email}</a>)
+                        </div>
+                        <div style="background:#fff; width:100%; padding:10px; border-radius:4px; font-size:13px;">${msg.message}</div>`;
+                    messageList.appendChild(item);
+                });
+            } catch (error) { messageList.innerHTML = '<div class="empty-msg" style="color:red">Failed to load messages.</div>'; }
+        }
+
+        // Initial Load
+        loadProducts();
+        loadOffers();
+    </script>
+</body>
+</html>

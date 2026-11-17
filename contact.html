@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - FADE Fashion Store</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS Variables - Ivory Theme */
+        :root {
+            --primary-color: #2c2a29; 
+            --accent-color: #b89b72; 
+            --bg-color: #fcfbf7; 
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --text-gray: #6b6b6b;
+            --border-color: #e8e3d9; 
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-color); color: var(--primary-color); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* ---------------- HEADER ---------------- */
+        header { background: var(--header-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color); }
+        .logo { display: flex; align-items: center; font-family: var(--font-heading); font-size: 24px; font-weight: 700; letter-spacing: 2px; }
+        .logo i { margin-right: 8px; font-size: 20px; }
+        .logo span { font-family: var(--font-body); font-size: 10px; display: block; letter-spacing: 3px; color: var(--text-gray);}
+        .header-icons { display: flex; gap: 15px; font-size: 20px; align-items: center; }
+        .cart-icon { position: relative; cursor: pointer; }
+        .cart-count { position: absolute; top: -5px; right: -8px; background: #d32f2f; color: white; font-size: 10px; width: 16px; height: 16px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        .desktop-nav, .search-bar, .desktop-account { display: none; }
+
+        /* ---------------- PAGE HEADER ---------------- */
+        .page-header { background: #f4f1eb; padding: 40px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        .page-title { font-family: var(--font-heading); font-size: 36px; margin-bottom: 5px; }
+        .breadcrumb { font-size: 13px; color: var(--text-gray); }
+        .breadcrumb a { color: var(--primary-color); font-weight: 500; }
+
+        /* ---------------- CONTACT CARDS ---------------- */
+        .contact-cards-section {
+            max-width: 1200px;
+            margin: -30px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+            border-color: var(--accent-color);
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            background: #f4f1eb;
+            color: var(--accent-color);
+            font-size: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px;
+            transition: 0.3s;
+        }
+
+        .info-card:hover .info-icon {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
+        .info-card h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-family: var(--font-heading);
+        }
+
+        .info-card p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* ---------------- MAIN CONTACT FORM ---------------- */
+        .contact-main-wrapper {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .contact-image {
+            flex: 1;
+            min-width: 300px;
+            background: url('https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&q=80') center/cover no-repeat;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .contact-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(44,42,41,0.7), rgba(44,42,41,0.3));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px;
+            color: #fff;
+        }
+
+        .contact-image-overlay h3 {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .contact-image-overlay p {
+            font-size: 15px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .contact-form-container {
+            flex: 1.2;
+            min-width: 300px;
+            padding: 40px;
+        }
+
+        .contact-form-container h3 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .contact-form-container p {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            background: var(--bg-color);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(184, 155, 114, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* ---------------- FAQ SECTION ---------------- */
+        .faq-section {
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .faq-section h2 {
+            font-family: var(--font-heading);
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 20px;
+        }
+
+        .faq-item h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faq-item h4 i {
+            color: var(--accent-color);
+        }
+
+        .faq-item p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.6;
+            padding-left: 25px;
+        }
+
+        /* ---------------- MOBILE MENU DRAWER ---------------- */
+        .mobile-menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .mobile-menu-overlay.active { opacity: 1; visibility: visible; }
+        .mobile-menu { position: fixed; top: 0; right: -100%; width: 80%; max-width: 320px; height: 100vh; background: var(--header-bg); z-index: 999; overflow-y: auto; transition: 0.3s ease-in-out; padding: 20px; }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
+        .menu-links li a { display: flex; align-items: center; justify-content: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 14px; font-weight: 500; }
+        .menu-links li a i:first-child { width: 30px; font-size: 16px; color: var(--text-gray); }
+        .menu-section-title { font-size: 12px; text-transform: uppercase; color: var(--text-gray); margin: 20px 0 10px; font-weight: 600; letter-spacing: 1px; }
+        .login-btn { width: 100%; padding: 12px; border: 1px solid var(--border-color); background: var(--header-bg); border-radius: 5px; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: 500; margin-top: 20px; cursor: pointer; color: var(--primary-color); }
+
+        /* ---------------- FOOTER ---------------- */
+        footer { background: var(--header-bg); border-top: 1px solid var(--border-color); padding: 40px 20px 20px; }
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 30px; }
+        .footer-col h4 { font-size: 16px; margin-bottom: 15px; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { font-size: 14px; color: var(--text-gray); transition: 0.3s; }
+        .footer-col ul li a:hover { color: var(--primary-color); }
+        .footer-logo-desc { font-size: 13px; color: var(--text-gray); margin: 15px 0; line-height: 1.6; }
+        .social-icons { display: flex; gap: 15px; font-size: 18px; }
+        .social-icons i { cursor: pointer; transition: 0.3s; }
+        .social-icons i:hover { color: var(--accent-color); }
+        .newsletter-form { display: flex; margin-top: 15px; }
+        .newsletter-form input { flex: 1; padding: 10px 15px; border: 1px solid var(--border-color); border-right: none; outline: none; width: 100%; background: var(--bg-color); }
+        .newsletter-form button { background: var(--primary-color); color: #fff; border: none; padding: 10px 20px; cursor: pointer; font-weight: 500; }
+        .footer-bottom { display: flex; flex-direction: column; gap: 15px; align-items: center; text-align: center; border-top: 1px solid var(--border-color); padding-top: 20px; font-size: 12px; color: var(--text-gray); }
+        .footer-bottom-links { display: flex; gap: 15px; }
+
+        /* ================= DESKTOP VIEW ================= */
+        @media (min-width: 768px) {
+            header { padding: 15px 40px; }
+            .header-icons .fa-bars { display: none; }
+            .search-bar { display: flex; align-items: center; background: var(--bg-color); padding: 10px 15px; border-radius: 5px; width: 40%; max-width: 500px; border: 1px solid var(--border-color); }
+            .search-bar input { border: none; background: transparent; width: 100%; margin-left: 10px; outline: none; font-family: var(--font-body); }
+            .desktop-account { display: flex; align-items: center; gap: 20px; font-size: 14px; font-weight: 500; }
+            .desktop-account a { display: flex; align-items: center; gap: 6px; }
+            .desktop-nav { display: flex; justify-content: center; gap: 30px; padding: 15px 0; border-bottom: 1px solid var(--border-color); font-size: 14px; font-weight: 500; background: var(--header-bg); }
+            .desktop-nav a.active { border-bottom: 2px solid var(--primary-color); padding-bottom: 13px;}
+            
+            .page-header { padding: 60px 40px; }
+            .page-title { font-size: 42px; }
+            
+            footer { padding: 50px 40px 20px; margin-top: 40px; }
+            .footer-grid { grid-template-columns: 2fr 1fr 1fr 1fr 2fr; gap: 30px; margin-bottom: 40px; }
+            .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <div>
+                FADE
+                <span>FASHION STORE</span>
+            </div>
+        </a>
+
+        <form class="search-bar" onsubmit="handleSearch(event)">
+            <i class="fa-solid fa-magnifying-glass" style="color: #888;"></i>
+            <input type="text" id="desktop-search-input" placeholder="Search for products...">
+        </form>
+
+        <div class="desktop-account">
+            <a href="login.html" id="nav-account"><i class="fa-regular fa-user"></i> Account</a>
+            <a href="wishlist.html">
+                <i class="fa-solid fa-star"></i> Wishlist 
+                <span id="desktop-wishlist-count" style="background:var(--accent-color); color:#fff; border-radius:50%; padding:2px 6px; font-size:10px; margin-left:3px;">0</span>
+            </a>
+            <a href="#" class="cart-icon" onclick="toggleCart(event)"><i class="fa-solid fa-cart-shopping"></i><span class="cart-count">0</span> cart</a>
+        </div>
+
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass" style="display: block; font-size: 18px;" onclick="mobileSearchPrompt()"></i>
+            <a href="wishlist.html"><i class="fa-solid fa-star" style="display: block; font-size: 18px;"></i></a>
+            <div class="cart-icon" style="display: block;" onclick="window.location.href='index.html'">
+                <i class="fa-solid fa-cart-shopping" style="font-size: 18px;"></i>
+                <span class="cart-count">0</span>
+            </div>
+            <i class="fa-solid fa-bars" id="menu-btn"></i>
+        </div>
+    </header>
+
+    <!-- Desktop Nav -->
+    <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="tshirts.html">T-Shirts</a>
+        <a href="hoodies-jackets.html">Hoodies & Jackets</a>
+        <a href="#">Bottom Wear</a>
+        <a href="shoes.html">Shoes</a>
+        <a href="womens-wear.html">Women's Wear</a>
+        <a href="kids-wear.html">Kids' Wear</a>
+        <a href="offers.html">Offers</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html" class="active">Contact Us</a>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1 class="page-title">Get in Touch</h1>
+        <div class="breadcrumb"><a href="index.html">Home</a> / <span>Contact Us</span></div>
+    </section>
+
+    <!-- Contact Info Cards -->
+    <section class="contact-cards-section">
+        <div class="info-card">
+            <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+            <h4>Call Us</h4>
+            <p>+91 98765 43210<br>Mon - Sat, 9AM - 7PM</p>
+        </div>
+        <div class="info-card">
+            <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+            <h4>Email Us</h4>
+            <p>support@fade.com<br>info@fade.com</p>
+        </div>
+        <div class="info-card">
+            <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <h4>Visit Us</h4>
+            <p>123 Fashion Street,<br>Kochi, Kerala 682001</p>
+        </div>
+    </section>
+
+    <!-- Main Contact Form Section -->
+    <section class="contact-main-wrapper">
+        <!-- Left Side Image -->
+        <div class="contact-image">
+            <div class="contact-image-overlay">
+                <h3>Let's Talk Fashion.</h3>
+                <p>Have questions about your order, sizing, or our latest collection? Drop us a message and our team will get back to you within 24 hours.</p>
+            </div>
+        </div>
+
+        <!-- Right Side Form -->
+        <div class="contact-form-container">
+            <h3>Send a Message</h3>
+            <p>Fill out the form below and we will get back to you shortly.</p>
+            
+            <form id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="cFirstName" class="form-control" placeholder="John" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="cLastName" class="form-control" placeholder="Doe" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="cEmail" class="form-control" placeholder="john@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" id="cSubject" class="form-control" placeholder="How can we help you?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="cMessage" class="form-control" rows="4" placeholder="Write your message here..." required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitMsgBtn">Send Message <i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <h4><i class="fa-solid fa-circle-question"></i> How long does shipping take?</h4>
+            <p>Standard shipping usually takes 3-5 business days. Express shipping options are available at checkout for 1-2 day delivery.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h4><i class="fa-solid fa-circle-question"></i> What is your return policy?</h4>
+            <p>We offer a 14-day return policy for unused items in their original packaging. Please visit our Returns page for more details.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h4><i class="fa-solid fa-circle-question"></i> Do you ship internationally?</h4>
+            <p>Currently, we only ship within India. We are working on expanding our shipping to international destinations soon!</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="logo">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <div>FADE<span>FASHION STORE</span></div>
+                </div>
+                <p class="footer-logo-desc">Trendy fashion for men, women and kids. Premium quality, everyday style.</p>
+                <div class="social-icons">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-twitter"></i>
+                    <i class="fa-brands fa-youtube"></i>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="tshirts.html">T-Shirts</a></li>
+                    <li><a href="hoodies-jackets.html">Hoodies & Jackets</a></li>
+                    <li><a href="shoes.html">Shoes</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Help & Support</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Shipping & Delivery</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Customer Care</h4>
+                <ul style="color: var(--text-gray); font-size: 14px;">
+                    <li style="margin-bottom: 15px;"><i class="fa-solid fa-phone" style="margin-right: 10px;"></i> +91 98765 43210</li>
+                    <li style="margin-bottom: 15px;"><i class="fa-solid fa-envelope" style="margin-right: 10px;"></i> support@fade.com</li>
+                    <li><i class="fa-regular fa-clock" style="margin-right: 10px;"></i> Mon - Sat, 9AM - 7PM</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Subscribe to Our Newsletter</h4>
+                <p style="font-size: 13px; color: var(--text-gray);">Get exclusive offers and updates.</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 FADE. All rights reserved.</div>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Return Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Drawer -->
+    <div class="mobile-menu-overlay" id="menu-overlay"></div>
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="logo" style="font-size: 20px;">
+                <i class="fa-solid fa-bag-shopping" style="font-size: 18px;"></i>
+                <div>FADE<span>FASHION STORE</span></div>
+            </div>
+            <button class="close-btn" id="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <ul class="menu-links">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="tshirts.html"><i class="fa-solid fa-shirt"></i> T-Shirts</a></li>
+            <li><a href="hoodies-jackets.html"><i class="fa-solid fa-vest"></i> Hoodies & Jackets</a></li>
+            <li><a href="#"><i class="fa-solid fa-socks"></i> Bottom Wear</a></li>
+            <li><a href="shoes.html"><i class="fa-solid fa-shoe-prints"></i> Shoes</a></li>
+            <li><a href="womens-wear.html"><i class="fa-solid fa-person-dress"></i> Women's Wear</a></li>
+            <li><a href="kids-wear.html"><i class="fa-solid fa-child"></i> Kids' Wear</a></li>
+        </ul>
+
+        <div class="menu-section-title">Other Links</div>
+        <ul class="menu-links">
+            <li><a href="offers.html"><i class="fa-solid fa-tag"></i> Offers</a></li>
+            <li><a href="about.html"><i class="fa-solid fa-circle-info"></i> About Us</a></li>
+            <li><a href="wishlist.html"><i class="fa-solid fa-star"></i> Wishlist</a></li>
+            <li><a href="contact.html"><i class="fa-solid fa-phone"></i> Contact Us</a></li>
+        </ul>
+
+        <button class="login-btn" id="mobile-login-btn" onclick="window.location.href='login.html'">
+            <i class="fa-regular fa-user"></i> Login / Register
+        </button>
+    </div>
+
+    <!-- Firebase & JS -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8cYU0tb5kkpUiiXawgqa8usuBiexPivg",
+            authDomain: "fadestore-fa311.firebaseapp.com",
+            projectId: "fadestore-fa311",
+            storageBucket: "fadestore-fa311.firebasestorage.app",
+            messagingSenderId: "713477757029",
+            appId: "1:713477757029:web:0997af2eb72e9dc1bb4e8c",
+            measurementId: "G-WW2N8F77VZ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // ---- Auth Logic (Login ചെയ്താൽ പേര് കാണിക്കാൻ) ----
+        onAuthStateChanged(auth, (user) => {
+            const navAccount = document.getElementById('nav-account');
+            const mobileLoginBtn = document.getElementById('mobile-login-btn');
+            if (user) {
+                let displayName = user.displayName;
+                if (!displayName && user.email) { displayName = user.email.split('@')[0]; }
+                displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+                if(navAccount) { navAccount.innerHTML = `<i class="fa-regular fa-user"></i> ${displayName}`; navAccount.href = "account.html"; }
+                if(mobileLoginBtn) {
+                    mobileLoginBtn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Logout';
+                    mobileLoginBtn.onclick = () => { signOut(auth).then(() => { alert("Logged out!"); window.location.reload(); }); };
+                }
+            } else {
+                if(navAccount) { navAccount.innerHTML = `<i class="fa-regular fa-user"></i> Account`; navAccount.href = "login.html"; }
+                if(mobileLoginBtn) { mobileLoginBtn.innerHTML = '<i class="fa-regular fa-user"></i> Login / Register'; mobileLoginBtn.onclick = () => window.location.href = 'login.html'; }
+            }
+        });
+
+        // ---- Contact Form Submit Logic ----
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitMsgBtn');
+            btn.innerHTML = 'Sending...'; 
+            btn.disabled = true;
+
+            const msgData = {
+                name: document.getElementById('cFirstName').value + " " + document.getElementById('cLastName').value,
+                email: document.getElementById('cEmail').value,
+                subject: document.getElementById('cSubject').value,
+                message: document.getElementById('cMessage').value,
+                timestamp: Date.now()
+            };
+
+            try {
+                await addDoc(collection(db, "messages"), msgData);
+                alert("Message sent successfully! We will get back to you soon.");
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                alert("Failed to send message: " + error.message);
+            } finally {
+                btn.innerHTML = 'Send Message <i class="fa-solid fa-paper-plane"></i>'; 
+                btn.disabled = false;
+            }
+        });
+
+        // ---- Mobile Menu Toggle ----
+        const menuBtn = document.getElementById('menu-btn');
+        const closeBtn = document.getElementById('close-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('menu-overlay');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+        menuBtn.addEventListener('click', toggleMenu);
+        closeBtn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        // ---- Search Logic ----
+        window.handleSearch = function(event) {
+            event.preventDefault();
+            const q = document.getElementById('desktop-search-input').value.trim();
+            if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+        }
+        window.mobileSearchPrompt = function() {
+            const q = prompt("What are you looking for?");
+            if(q && q.trim()) window.location.href = `search.html?q=${encodeURIComponent(q.trim())}`;
+        }
+    </script>
+</body>
+</html>
